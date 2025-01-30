@@ -1,146 +1,151 @@
-FastAPI Task Manager
-This is a FastAPI-based CRUD service for managing tasks, integrated with PostgreSQL for data storage and Google Gemini for AI-powered task categorization.
+# FastAPI Task Manager
 
-Table of Contents
-Features
+This is a **FastAPI-based CRUD service** for managing tasks, integrated with **PostgreSQL** for data storage and **Google Gemini** for AI-powered task categorization.
 
-Setup Instructions
+## Table of Contents
+- [Features](#features)
+- [Setup Instructions](#setup-instructions)
+- [API Usage](#api-usage)
+- [Assumptions](#assumptions)
+- [Postman Collection](#postman-collection)
 
-API Usage
+## Features
 
-Assumptions
+- **CRUD Operations**: Create, Read, Update, and Delete tasks.
+- **AI-Powered Task Categorization**: Uses Google Gemini to categorize tasks into *"Bug"*, *"Feature Request"*, or *"Improvement"*.
+- **Database Migrations**: Uses Alembic for seamless database schema migrations.
 
-Postman Collection
+---
 
-Features
-CRUD Operations: Create, Read, Update, and Delete tasks.
+## Setup Instructions
 
-AI-Powered Task Categorization: Uses Google Gemini to categorize tasks into "Bug", "Feature Request", or "Improvement".
+### Prerequisites
+- Python 3.9+
+- PostgreSQL
+- Google Gemini API Key
 
-Database Migrations: Uses Alembic for seamless database schema migrations.
+### Steps
 
-Setup Instructions
-Prerequisites
-Python 3.9+
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/your-username/fastapi-task-manager.git
+    cd fastapi-task-manager
+    ```
 
-PostgreSQL
+2. **Set up a virtual environment**:
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    ```
 
-Google Gemini API Key
+3. **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-Steps
-Clone the repository:
+4. **Set up environment variables**:
+    Create a `.env` file in the root directory with the following content:
+    ```plaintext
+    DATABASE_URL=postgresql://username:password@localhost:5432/taskdb
+    GEMINI_API_KEY=your_gemini_api_key_here
+    ```
 
-bash
-Copy
-git clone https://github.com/your-username/fastapi-task-manager.git
-cd fastapi-task-manager
-Set up a virtual environment:
+5. **Run database migrations**:
+    ```bash
+    alembic upgrade head
+    ```
 
-bash
-Copy
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-Install dependencies:
+6. **Start the FastAPI server**:
+    ```bash
+    uvicorn main:app --reload
+    ```
 
-bash
-Copy
-pip install -r requirements.txt
-Set up environment variables:
-Create a .env file in the root directory with the following content:
+---
 
-plaintext
-Copy
-DATABASE_URL=postgresql://username:password@localhost:5432/taskdb
-GEMINI_API_KEY=your_gemini_api_key_here
-Run database migrations:
+## API Usage
 
-bash
-Copy
-alembic upgrade head
-Start the FastAPI server:
+### Tasks
 
-bash
-Copy
-uvicorn main:app --reload
-API Usage
-Tasks
-Create a Task:
+- **Create a Task**  
+  **Endpoint**: `POST /tasks/`
 
-Endpoint: POST /tasks/
+  **Request Body**:
+    ```json
+    {
+      "title": "Fix login button",
+      "description": "The login button does not work on mobile devices.",
+      "status": false
+    }
+    ```
 
-Request Body:
+- **Retrieve a Task**  
+  **Endpoint**: `GET /tasks/{task_id}`
 
-json
-Copy
-{
-  "title": "Fix login button",
-  "description": "The login button does not work on mobile devices.",
-  "status": false
-}
-Retrieve a Task:
+- **Update a Task**  
+  **Endpoint**: `PUT /tasks/{task_id}`
 
-Endpoint: GET /tasks/{task_id}
+  **Request Body**:
+    ```json
+    {
+      "title": "Fix login button on mobile",
+      "status": true
+    }
+    ```
 
-Update a Task:
+- **Delete a Task**  
+  **Endpoint**: `DELETE /tasks/{task_id}`
 
-Endpoint: PUT /tasks/{task_id}
+### Task Analysis
 
-Request Body:
+- **Analyze a Task**  
+  **Endpoint**: `POST /tasks/analyze/`
 
-json
-Copy
-{
-  "title": "Fix login button on mobile",
-  "status": true
-}
-Delete a Task:
+  **Request Body**:
+    ```json
+    {
+      "description": "The login button does not work on mobile devices."
+    }
+    ```
 
-Endpoint: DELETE /tasks/{task_id}
+  **Response**:
+    ```json
+    {
+      "category": "Bug"
+    }
+    ```
 
-Task Analysis
-Analyze a Task:
+---
 
-Endpoint: POST /tasks/analyze/
+## Assumptions
 
-Request Body:
+- PostgreSQL is used as the database.
+- Google Gemini is used for task categorization.
+- Alembic is used for database migrations.
 
-json
-Copy
-{
-  "description": "The login button does not work on mobile devices."
-}
-Response:
+---
 
-json
-Copy
-{
-  "category": "Bug"
-}
-Assumptions
-PostgreSQL is used as the database.
+## Postman Collection
 
-Google Gemini is used for task categorization.
+You can import the **Postman collection** to test the API endpoints:
 
-Alembic is used for database migrations.
+1. **Download the Postman collection file**: `postman_collection.json`.
+2. **Import the file** into Postman.
+3. Use the provided requests to test the API.
 
-Postman Collection
-You can import the Postman collection to test the API endpoints:
+Alternatively, use the following **cURL commands**:
 
-Download the Postman collection file: postman_collection.json.
+- **Create a Task**:
+    ```bash
+    curl -X POST "http://127.0.0.1:8000/tasks/" -H "Content-Type: application/json" -d '{"title": "Fix login button", "description": "The login button does not work on mobile devices.", "status": false}'
+    ```
 
-Import the file into Postman.
+- **Analyze a Task**:
+    ```bash
+    curl -X POST "http://127.0.0.1:8000/tasks/analyze/" -H "Content-Type: application/json" -d '{"description": "The login button does not work on mobile devices."}'
+    ```
 
-Use the provided requests to test the API.
+---
 
-Alternatively, use the following cURL commands:
+## License
 
-Create a Task
-bash
-Copy
-curl -X POST "http://127.0.0.1:8000/tasks/" -H "Content-Type: application/json" -d '{"title": "Fix login button", "description": "The login button does not work on mobile devices.", "status": false}'
-Analyze a Task
-bash
-Copy
-curl -X POST "http://127.0.0.1:8000/tasks/analyze/" -H "Content-Type: application/json" -d '{"description": "The login button does not work on mobile devices."}'
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.

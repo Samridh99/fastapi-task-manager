@@ -4,8 +4,12 @@ from sqlalchemy.orm import sessionmaker, Session
 from models import Base, Task
 from pydantic import BaseModel
 from analyzer import analyzer_workflow
+import os
+from dotenv import load_dotenv 
 
-DATABASE_URL = "postgresql://postgres:2580@localhost:5432/taskdb"
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
